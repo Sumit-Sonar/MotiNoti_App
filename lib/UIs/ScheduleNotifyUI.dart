@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart';
 import 'package:motinoti_app/services/notifiService.dart';
+import 'package:motinoti_app/services/sharedprefclass.dart';
 
 DateTime scheduleTime = DateTime.now();
 
@@ -168,39 +169,58 @@ class ScheduleSwitch extends StatefulWidget {
 }
 
 class _ScheduleSwitchState extends State<ScheduleSwitch> {
+  final SharedPrefClass _sharedPrefService = SharedPrefClass();
+
   bool isSwitched = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSwitchState();
+  }
+
+  void _loadSwitchState() async {
+    bool savedstate = await _sharedPrefService.getHourlyNotification();
+    setState(() {
+      isSwitched = savedstate;
+    });
+  }
+
+  void toggleSwitch(bool value) {
+    setState(() {
+      isSwitched = value;
+      _sharedPrefService.setHourlyNotification(value);
+
+      if (isSwitched) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Hourly notifications enabled'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        NotificationService().scheduleHourlyNotification(
+          id: 2,
+          title: 'Lost in phone?',
+          body: 'Checkout this quote by..',
+          scheduledNotificationDateTime: scheduleTime,
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Hourly notifications disabled'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        NotificationService().stopHourlyNotification(2);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Switch(
       value: isSwitched,
-      onChanged: (value) {
-        setState(() {
-          isSwitched = value;
-          if (isSwitched) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Notification Scheduled for Hourly'),
-                duration: Duration(seconds: 10),
-              ),
-            );
-            NotificationService().scheduleHourlyNotification(
-              id: 2,
-              title: 'Lost in phone?',
-              body: 'Checkout this Quote By...',
-              scheduledNotificationDateTime: scheduleTime,
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Hourly Notification Turned Off'),
-                duration: Duration(seconds: 5),
-              ),
-            );
-            NotificationService().stopHourlyNotification(2);
-          }
-        });
-      },
+      onChanged: toggleSwitch,
     );
   }
 }

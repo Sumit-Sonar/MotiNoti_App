@@ -1,16 +1,81 @@
-# motinoti_app
+MotiNoti App
+MotiNoti is a Flutter-based mobile application designed to provide users with daily motivation through motivational posts, videos, and quotes. The app also features a notification system that allows users to schedule motivational notifications at specified times or receive hourly notifications to help combat phone addiction and endless scrolling.
 
-A new Flutter project.
+Features
+Motivational Posts: Browse and read motivational posts to stay inspired.
+Motivational Videos: Watch motivational videos to boost your mood and motivation.
+Motivational Quotes: Get daily motivational quotes to keep you going.
+Scheduled Notifications: Schedule notifications at specific times to receive motivational content.
+Hourly Notifications: Enable hourly notifications to get regular motivational reminders and reduce phone addiction.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+Installation
+Clone the repository:
 
-A few resources to get you started if this is your first Flutter project:
+sh
+Copy code
+git clone https://github.com/yourusername/motinoti_app.git
+cd motinoti_app
+Install dependencies:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+sh
+Copy code
+flutter pub get
+Run the app:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+sh
+Copy code
+flutter run
+Usage
+Enabling Hourly Notifications
+To enable hourly notifications:
+
+Go to the settings screen.
+Toggle the switch to enable hourly notifications.
+You will receive a motivational notification every hour.
+Scheduling Notifications
+To schedule a notification at a specific time:
+
+Go to the notification scheduling screen.
+Select the date and time you want to receive the notification.
+Tap the "Set" button to schedule the notification.
+Stopping Hourly Notifications
+To stop hourly notifications:
+
+Go to the settings screen.
+Toggle the switch to disable hourly notifications.
+Hourly notifications will be stopped immediately.
+Development
+Prerequisites
+Flutter SDK
+Dart
+Android Studio or Visual Studio Code
+Dependencies
+flutter_local_notifications
+timezone
+shared_preferences
+Directory Structure
+css
+Copy code
+lib/
+├── main.dart
+├── UIs/
+│   ├── MyHomePage.dart
+│   ├── MotiQuotesUI.dart
+│   ├── ScheduleNotifyUI.dart
+├── services/
+│   ├── notifiService.dart
+│   └── sharedPrefService.dart
+Contributing
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+Fork the project
+Create your feature branch (git checkout -b feature/my-feature)
+Commit your changes (git commit -am 'Add some feature')
+Push to the branch (git push origin feature/my-feature)
+Open a Pull Request
+License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+Contact
+For any questions or inquiries, please contact your-email@example.com.
