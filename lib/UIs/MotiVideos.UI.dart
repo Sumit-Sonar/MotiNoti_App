@@ -13,7 +13,7 @@ class MotiVideosUI extends StatefulWidget {
 class _MotiVideosUIState extends State<MotiVideosUI> {
   final String apiKey =
       'AIzaSyBZ_LedH8CzZKBRqpWbtZPPkpGX5QFmEJQ'; // Replace with your actual API key
-  final String searchQuery = 'motivational videos'; // Improved search query
+  final String searchQuery = 'new motivational videos'; // Improved search query
   final int maxResults = 10;
 
   late Future<List<String>> _videosFuture;
