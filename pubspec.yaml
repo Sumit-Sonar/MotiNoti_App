@@ -41,6 +41,8 @@ dependencies:
   flutter_local_notifications: ^13.0.0
   flutter_cupertino_datetime_picker: ^3.0.0
   timezone: ^0.9.4
+  permission_handler: ^11.3.1
+  shared_preferences: ^2.2.3
   
 
 dev_dependencies:
