@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
-import 'package:motinoti_app/services/adsServices.dart';
+import 'package:motinoti/services/adsServices.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:screenshot/screenshot.dart';
@@ -174,23 +174,29 @@ class _MotiPostsUIState extends State<MotiPostsUI> {
   }
 
   ScreenshotController screenshotController = ScreenshotController();
+
   void saveAndShareImage() async {
-    final directory = (await getApplicationDocumentsDirectory()).path;
-    final imagePath = '$directory/motivational_post.png';
+    final directory = await getApplicationDocumentsDirectory();
+    final imagePath = '${directory.path}/motivational_post.png';
 
     try {
-      final image =
-          await screenshotController.capture(delay: Duration(milliseconds: 10));
+      final image = await screenshotController.capture(delay: Duration(milliseconds: 10));
+
       if (image != null) {
         final imageFile = File(imagePath);
         await imageFile.writeAsBytes(image);
+
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("Your creation has been saved!"),
         ));
+
+        // Share the image using share_plus
         await Share.shareXFiles(
           [XFile(imageFile.path)],
           text: 'Check out my motivational post!',
         );
+      } else {
+        print('Error: Image is null');
       }
     } catch (e) {
       print('Error capturing or saving image: $e');
@@ -245,27 +251,20 @@ class _MotiPostsUIState extends State<MotiPostsUI> {
                     : SizedBox.shrink(),
           ),
           if (!isLoading && !hasError && imagesData.isNotEmpty)
-            GestureDetector(
-              onVerticalDragStart: (details) {
-                initialY = details.localPosition.dy;
-              },
-              onVerticalDragUpdate: (details) {
-                if (initialY - details.localPosition.dy > 100) {
-                  loadNextImage(_pageController.page!.toInt());
-                }
-              },
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: imagesData.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(
-                        top: 10, bottom: 70, left: 5, right: 5),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
+            PageView.builder(
+              controller: _pageController,
+              itemCount: imagesData.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(
+                      top: 10, bottom: 70, left: 5, right: 5),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Screenshot(
+                          controller: screenshotController,
+                          child: Container(
                             width: double.infinity,
                             height: 405,
                             decoration: BoxDecoration(
@@ -302,6 +301,8 @@ class _MotiPostsUIState extends State<MotiPostsUI> {
                               ),
                             ),
                           ),
+                        ),
+                      
                           SizedBox(height: 10),
                           Text(
                             'Photo by ${imagesData[index]['photographer']} on Unsplash',
@@ -351,7 +352,7 @@ class _MotiPostsUIState extends State<MotiPostsUI> {
                   );
                 },
               ),
-            )
+            
         ],
       ),
     );

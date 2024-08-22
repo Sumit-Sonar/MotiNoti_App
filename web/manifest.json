@@ -1,6 +1,6 @@
 {
-    "name": "motinoti_app",
-    "short_name": "motinoti_app",
+    "name": "motinoti",
+    "short_name": "motinoti",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

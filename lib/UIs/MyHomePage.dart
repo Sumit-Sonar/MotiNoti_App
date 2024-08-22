@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:motinoti_app/UIs/MotiPostsUI.dart';
-import 'package:motinoti_app/UIs/MotiQuotesUI.dart';
-import 'package:motinoti_app/UIs/MotiVideos.UI.dart';
-import 'package:motinoti_app/UIs/ScheduleNotifyUI.dart';
-import 'package:motinoti_app/services/adsServices.dart';
+import 'package:motinoti/UIs/MotiPostsUI.dart';
+import 'package:motinoti/UIs/MotiQuotesUI.dart';
+import 'package:motinoti/UIs/MotiVideos.UI.dart';
+import 'package:motinoti/UIs/ScheduleNotifyUI.dart';
+import 'package:motinoti/services/adsServices.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:motinoti_app/services/notifiService.dart';
+import 'package:motinoti/services/notifiService.dart';
 
 class MyHomePage extends StatefulWidget {
   final NotificationService notificationService;

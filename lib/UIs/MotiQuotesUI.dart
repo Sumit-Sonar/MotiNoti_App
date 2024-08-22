@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
-import 'package:motinoti_app/services/adsServices.dart';
+import 'package:motinoti/services/adsServices.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MotiQuotesUI extends StatefulWidget {
@@ -12,13 +12,15 @@ class MotiQuotesUI extends StatefulWidget {
   State<MotiQuotesUI> createState() => _MotiQuotesUIState();
 }
 
-class _MotiQuotesUIState extends State<MotiQuotesUI> {
+class _MotiQuotesUIState extends State<MotiQuotesUI> with SingleTickerProviderStateMixin {
   late Future<Map<String, String>> futureQuote;
   String apiUrl =
       'https://zenquotes.io/api/quotes/3df4c8bc385b60f0c0bc573582ef65df';
   bool isLoading = false;
   final AdsService adsService = AdsService();
   double initialY = 0.0;
+  late AnimationController animationController;
+  late Animation<double> opacityAnimation;
 
   @override
   void initState() {
@@ -26,6 +28,23 @@ class _MotiQuotesUIState extends State<MotiQuotesUI> {
     adsService.loadBannerAd(context);
     futureQuote = fetchQuote();
     checkAndShowUserGuide();
+    
+    // Initialize AnimationController
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+
+    // Define the animation for the opacity of the quote
+    opacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
+      CurvedAnimation(parent: animationController, curve: Curves.easeOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
   }
 
   Future<Map<String, String>> fetchQuote() async {
@@ -134,12 +153,19 @@ class _MotiQuotesUIState extends State<MotiQuotesUI> {
           if (initialY - details.localPosition.dy > 100) {
             setState(() {
               isLoading = true;
+            });
+
+            // Start the fade-out animation
+            animationController.forward().then((_) {
               futureQuote = fetchQuote().then((value) {
                 setState(() {
                   isLoading = false;
                 });
                 return value;
               });
+
+              // Reset the animation
+              animationController.reverse();
             });
           }
         },
@@ -171,42 +197,51 @@ class _MotiQuotesUIState extends State<MotiQuotesUI> {
                           style: TextStyle(fontSize: 20, color: Colors.white),
                         );
                       } else {
-                        return Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            children: [
-                              Text(
-                                snapshot.data?['quote'] ?? '',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  color: Colors.white,
-                                  fontStyle: FontStyle.italic,
-                                  shadows: [
-                                    Shadow(
-                                      offset: Offset(1, 1),
-                                      blurRadius: 2,
-                                      color: Colors.black,
+                        return AnimatedBuilder(
+                          animation: animationController,
+                          builder: (context, child) {
+                            return FadeTransition(
+                              opacity: opacityAnimation,
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      snapshot.data?['quote'] ?? '',
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontSize: 24,
+                                        color: Colors.white,
+                                        fontStyle: FontStyle.italic,
+                                        shadows: [
+                                          Shadow(
+                                            offset: Offset(1, 1),
+                                            blurRadius: 2,
+                                            color: Colors.black,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          "- ${snapshot.data?['author'] ?? 'Unknown'}",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
                               ),
-                              SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    "- ${snapshot.data?['author'] ?? 'Unknown'}",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                            );
+                          },
                         );
                       }
                     },

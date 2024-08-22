@@ -1,4 +1,4 @@
-# motinoti_app
+# motinoti
 
 A new Flutter project.
 

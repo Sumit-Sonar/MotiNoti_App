@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:motinoti_app/services/adsServices.dart';
-import 'package:motinoti_app/services/notifiService.dart';
-import 'package:motinoti_app/services/sharedprefclass.dart';
+import 'package:motinoti/services/adsServices.dart';
+import 'package:motinoti/services/notifiService.dart';
+import 'package:motinoti/services/sharedprefclass.dart';
 
 DateTime scheduleTime = DateTime.now();
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:motinoti_app/UIs/MotiQuotesUI.dart';
-import 'package:motinoti_app/UIs/MyHomePage.dart';
-import 'package:motinoti_app/services/foreground_task.dart';
-import 'package:motinoti_app/services/notifiService.dart';
+import 'package:motinoti/UIs/MotiQuotesUI.dart';
+import 'package:motinoti/UIs/MyHomePage.dart';
+import 'package:motinoti/services/foreground_task.dart';
+import 'package:motinoti/services/notifiService.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {

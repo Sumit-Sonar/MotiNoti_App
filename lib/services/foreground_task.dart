@@ -1,13 +1,13 @@
 import 'dart:isolate';
-
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:motinoti_app/services/notifiService.dart';
+import 'package:motinoti/services/notifiService.dart';
 
 void startForegroundTask(NotificationService notificationService) {
   FlutterForegroundTask.startService(
-      notificationTitle: 'Lost In Phone?',
-      notificationText: "Checkout this post by...",
-      callback: foregroundcallback);
+    notificationTitle: 'Lost In Phone?',
+    notificationText: "Checkout this post by...",
+    callback: foregroundcallback,
+  );
 }
 
 void foregroundcallback() {
@@ -17,16 +17,24 @@ void foregroundcallback() {
 class ForegroundTaskHandler extends TaskHandler {
   NotificationService? notificationService;
 
-  Future<void> onEvent(DateTime timestamp, SendPort? sendPort) async {
+  @override
+  void onStart(DateTime timestamp) {
+    notificationService = NotificationService();
+    scheduleHourlyNotifications();
+  }
+
+  @override
+  void onRepeatEvent(DateTime timestamp) {
     // Perform repeated tasks here if needed
   }
 
   @override
-  Future<void> onDestroy(DateTime timestamp, SendPort? sendPort) async {
+  void onDestroy(DateTime timestamp) {
     // Clean up tasks here if needed
   }
 
-  void onButtonPressed(String id) {
+  @override
+  void onNotificationButtonPressed(String id) {
     // Handle button press event here if needed
   }
 
@@ -36,14 +44,8 @@ class ForegroundTaskHandler extends TaskHandler {
   }
 
   @override
-  void onRepeatEvent(DateTime timestamp, SendPort? sendPort) {
-    // TODO: implement onRepeatEvent
-  }
-
-  @override
-  void onStart(DateTime timestamp, SendPort? sendPort) {
-    notificationService = NotificationService();
-    scheduleHourlyNotifications();
+  void onNotificationDismissed() {
+    // Handle notification dismiss event here if needed
   }
 
   void scheduleHourlyNotifications() {
@@ -53,7 +55,8 @@ class ForegroundTaskHandler extends TaskHandler {
       notificationService?.scheduleHourlyNotification(
         id: i,
         title: 'Hey! Lost in phone?',
-        body: 'Checkout this quote by...', scheduledNotificationDateTime: scheduledTime,
+        body: 'Checkout this quote by...',
+        scheduledNotificationDateTime: scheduledTime,
       );
     }
   }
